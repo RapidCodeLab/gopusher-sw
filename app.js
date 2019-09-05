@@ -48,6 +48,8 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
                     if (isSubscribed) {
 
                         console.log('User is subscribed')
+                        redirect(failURL)
+
                         
                     } else {
                         swRegistration.pushManager.subscribe({
@@ -64,15 +66,20 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
                             })
                             .catch(function (err) {
                                 console.log('Failed to subscribe user: ', err)
+                                redirect(failURL)
                             })
                     }
                 })
         })
         .catch(function (error) {
             console.error('Service Worker Error', error)
+            redirect(failURL)
+
         })
 } else {
     console.warn('Push messaging is not supported')
+    redirect(failURL)
+
 }
 
 function saveSubscription(subscription) {
@@ -92,8 +99,19 @@ function saveSubscription(subscription) {
         body: JSON.stringify(app.data),
      }).then(response => {
          console.warn('Data sent success.', response)
+         redirect(successURL) 
      }).catch(error => {
         console.warn('Error send data.', data, error)
+        redirect(failURL)
     })
 }
 
+//redirect feature
+
+let successURL = "https://success.com" // will redirect to this url after success subscribed
+let failURL = "https://fail.com" // will redirect to this url if decline subscription, or already subscribed, or subscriptions is not supported
+
+
+function redirect(url) {
+    window.location = url
+}
