@@ -3,12 +3,14 @@ let app = {}
 app.data = {}
 app.gateway = 'https://events.rapidcodelab.com/events/subscribe' //change to your eventsapp url
 app.data.channel = 'gopusher-landing' //Channel
+app.data.subid = 'subid_1' //SubID
 app.data.publisher='OBA2aPf8SvfDYC45h5RoryYKao2FIdpNvPgAPpGpDB3ootxzf6enwB2AqmmWfXrq' //PublisherAPI
 app.data.ua = navigator.userAgent || 'unknown'
-app.data.page = window.location.href || 'unknown'
+app.data.page = window.location.protocol+'//'+window.location.hostname || 'unknown'
 app.data.browser_lang = navigator.language || navigator.userLanguage
 app.data.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown'
 
+let isUCBrowser = app.data.ua.includes("UCBrowser")
 
 let isSubscribed = false
 let swRegistration = null
@@ -32,7 +34,7 @@ function urlB64ToUint8Array(base64String) {
 }
 
 // Installing service worker
-if ('serviceWorker' in navigator && 'PushManager' in window) {
+if ('serviceWorker' in navigator && 'PushManager' in window && !isUCBrowser) {
     console.log('Service Worker and Push is supported')
 
     navigator.serviceWorker.register('/sw.js')
