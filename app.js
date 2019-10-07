@@ -107,6 +107,11 @@ var clickidParamName = "cid" //for Binom  use get param with this name. sample: 
 function firePostBackURL(resp){
 
   var clickID = findGetParam(clickidParamName)
+
+  if (clickID == "" || clickID == null){
+    console.warn("Empty clickid param")  
+    return
+  }
   
   var trackerURL = "https://tracker.com/folder/click.php?cnv_id="+clickID+"&payout="+resp.price
 
