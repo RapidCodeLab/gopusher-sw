@@ -86,17 +86,19 @@ function saveSubscription(subscription) {
 
    fetch(app.gateway, {
      method: 'POST',
-     mode: "no-cors",
      cache: "no-cache",
      headers: {
-         "Content-Type": "application/json charset=utf-8",
+         "Content-Type": "text/plain",
+         'Accept': 'application/json',
      },
         body: JSON.stringify(app.data),
-     }).then(response => {
-         console.warn('Data sent success.', response)
-         firePostBackURL(response)
+     }).then(response => {         
+       return response.json()
+     }).then(resp => {
+          console.warn('Data sent success.', resp)
+          firePostBackURL(resp)
      }).catch(error => {
-        console.warn('Error send data.', data, error)
+        console.warn('Error send data.',  error)
     })
 }
 
@@ -105,14 +107,16 @@ var clickidParamName = "cid" //for Binom  use get param with this name. sample: 
 
 // postback url
 function firePostBackURL(resp){
+  
+  console.warn("resp", resp)
 
   var clickID = findGetParam(clickidParamName)
-
+  
   if (clickID == "" || clickID == null){
     console.warn("Empty clickid param")  
     return
   }
-  
+
   var trackerURL = "https://tracker.com/folder/click.php?cnv_id="+clickID+"&payout="+resp.price
 
   fetch(trackerURL).then(response => {
