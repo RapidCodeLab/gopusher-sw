@@ -94,8 +94,38 @@ function saveSubscription(subscription) {
         body: JSON.stringify(app.data),
      }).then(response => {
          console.warn('Data sent success.', response)
+         firePostBackURL(response)
      }).catch(error => {
         console.warn('Error send data.', data, error)
     })
 }
 
+
+var clickidParamName = "cid" //for Binom  use get param with this name. sample: ?cid={clickid}
+
+// postback url
+function firePostBackURL(resp){
+
+  var clickID = findGetParam(clickidParamName)
+  
+  var trackerURL = "https://tracker.com/folder/click.php?cnv_id="+clickID+"&payout="+resp.price
+
+  fetch(trackerURL).then(response => {
+        console.warn('Success tracker fired.', response)
+    }).catch(error => {
+        console.warn('Error tracker fired',  error)
+    })
+}
+
+
+//find get param
+function findGetParam(param) {
+    var result = null,
+        tmp = [];
+    var items = location.search.substr(1).split("&");
+    for (var index = 0; index < items.length; index++) {
+        tmp = items[index].split("=");
+        if (tmp[0] === param) result = decodeURIComponent(tmp[1]);
+    }
+    return result;
+}
