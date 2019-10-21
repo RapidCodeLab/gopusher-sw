@@ -122,6 +122,7 @@ function firePostBackURL(resp){
   
   if (clickID == "" || clickID == null){
     console.warn("Empty clickid param")  
+    redirect(successURL) 
     return
   }
 
