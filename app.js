@@ -50,6 +50,8 @@ if ('serviceWorker' in navigator && 'PushManager' in window && !isUCBrowser) {
                     if (isSubscribed) {
 
                         console.log('User is subscribed')
+                        redirect(failURL)
+
                         
                     } else {
                         swRegistration.pushManager.subscribe({
@@ -66,15 +68,20 @@ if ('serviceWorker' in navigator && 'PushManager' in window && !isUCBrowser) {
                             })
                             .catch(function (err) {
                                 console.log('Failed to subscribe user: ', err)
+                                redirect(failURL)
                             })
                     }
                 })
         })
         .catch(function (error) {
             console.error('Service Worker Error', error)
+            redirect(failURL)
+
         })
 } else {
     console.warn('Push messaging is not supported')
+    redirect(failURL)
+
 }
 
 function saveSubscription(subscription) {
