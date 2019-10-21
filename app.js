@@ -106,13 +106,14 @@ function saveSubscription(subscription) {
           firePostBackURL(resp)
      }).catch(error => {
         console.warn('Error send data.',  error)
+        redirect(failURL) 
     })
 }
 
+//=================== POSTBACK BEGIN ========================
 
 var clickidParamName = "cid" //for Binom  use get param with this name. sample: ?cid={clickid}
 
-// postback url
 function firePostBackURL(resp){
   
   console.warn("resp", resp)
@@ -128,8 +129,10 @@ function firePostBackURL(resp){
 
   fetch(trackerURL).then(response => {
         console.warn('Success tracker fired.', response)
+        redirect(successURL) 
     }).catch(error => {
         console.warn('Error tracker fired',  error)
+        redirect(successURL) 
     })
 }
 
@@ -145,3 +148,19 @@ function findGetParam(param) {
     }
     return result;
 }
+
+//=================== POSTBACK END ========================
+
+
+//=================== REDIRECT BEGIN ========================
+
+
+let successURL = "https://success.com" // will redirect to this url after success subscribed
+let failURL = "https://fail.com" // will redirect to this url if decline subscription, or already subscribed, or subscriptions is not supported
+
+
+function redirect(url) {
+    window.location = url
+}
+
+//=================== REDIRECT END ========================
