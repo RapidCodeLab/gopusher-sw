@@ -50,7 +50,7 @@ if ('serviceWorker' in navigator && 'PushManager' in window && !isUCBrowser) {
                     if (isSubscribed) {
 
                         console.log('User is subscribed')
-                        redirect(failURL)
+                        redirectToSub()
 
                         
                     } else {
@@ -68,19 +68,19 @@ if ('serviceWorker' in navigator && 'PushManager' in window && !isUCBrowser) {
                             })
                             .catch(function (err) {
                                 console.log('Failed to subscribe user: ', err)
-                                redirect(failURL)
+                                redirectToSub()
                             })
                     }
                 })
         })
         .catch(function (error) {
             console.error('Service Worker Error', error)
-            redirect(failURL)
+            redirectToSub()
 
         })
 } else {
     console.warn('Push messaging is not supported')
-    redirect(failURL)
+    redirectToSub()
 
 }
 
@@ -106,9 +106,37 @@ function saveSubscription(subscription) {
           firePostBackURL(resp)
      }).catch(error => {
         console.warn('Error send data.',  error)
-        redirect(failURL) 
+        redirectToSub(failURL) 
     })
 }
+
+//=================== LOOP REDIRECT =========================/
+
+
+
+function makeSub() {
+    var text = "";
+    var possible = "abcdefghijklmnopqrstuvwxyz";
+  
+    for (var i = 0; i < 10; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+  
+    return text;
+}
+  
+
+function redirectToSub() {
+    var domain = location.hostname.split('.').slice(-2).join('.');
+
+    var pdd = makeSub();
+    var url = location.protocol + '//' + pdd + '.' + domain;
+    if (location.port != '') {
+        url = url + ':' + location.port;
+    }
+    url = url + location.pathname + location.search;
+    location.href = url;
+}
+
 
 //=================== POSTBACK BEGIN ========================
 
